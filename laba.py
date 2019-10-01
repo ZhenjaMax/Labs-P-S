@@ -10,12 +10,12 @@ else:
     print('no results')
     exit
 
-### CHECK LINKS
-### for i in pages_list:
-###
+from help_wiki_function import is_page_valid
+for i in pages_list:
+    if not age_valid(i):
+        pages_list.remove(i)
 
 max_words, page_number_max = 0, 0
-
 for i in range(len(pages_list)):
     text = wikipedia.summary(pages_list[i])
     words = text.count(' ') + 1
