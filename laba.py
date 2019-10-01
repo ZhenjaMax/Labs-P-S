@@ -23,11 +23,13 @@ for i in range(len(pages_list)):
         max_words = words                                                       
         page_number_max = i                                                     
 print(max_words, wikipedia.page(pages_list[page_number_max]).title)          
-                                                                                
-chain=[]                                                                        
+
+# -------------------------------OK-------------------------------------------
+
+chain=[]                                                     
 chain.append(pages_list[0])                                                     
 for i in range(len(pages_list)-1):                                              
-    if pages_list[i+1] in wikipedia.page(pages_list[i]).links:                  
+    if pages_list[i+1] in wikipedia.page(pages_list[i]).links:  # ERROR wikipedia.exceptions.PageError: Page id "конго байҕал" does not match any pages. Try another id!               
         chain.append(pages_list[i+1])                                           
     else:                                                                       
         sublinks=wikipedia.page(pages_list[i]).links                            
