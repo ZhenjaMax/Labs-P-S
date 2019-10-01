@@ -22,7 +22,7 @@ for i in range(len(pages_list)):
     if words >= max_words:                                                      
         max_words = words                                                       
         page_number_max = i                                                     
-print(wikipedia.page(pages_list[page_number_max]).title, max_words)             
+print(max_words, wikipedia.page(pages_list[page_number_max]).title)          
                                                                                 
 chain=[]                                                                        
 chain.append(pages_list[0])                                                     
