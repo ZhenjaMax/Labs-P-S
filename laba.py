@@ -36,3 +36,14 @@ for i in pages_list:
                     chaid_add = [i, j, k]
                     chain.append(chain_add)
 print(chain)
+chain.append(pages_list[0])
+for i in range(len(pages_list)-1):
+    chain.append(pages_list[i])
+    if not pages_list[i+1] in wikipedia.page(pages_list[i]).links:
+        sublinks=wikipedia.page(pages_list[i]).links
+        for j in sublinks:
+            if j in pages_list:
+                chain.append(j)
+                chain.append(pages_list[i+1])
+    else:
+        chain.append(pages_list[i+1])
