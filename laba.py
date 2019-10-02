@@ -1,42 +1,40 @@
-import wikipedia                                                                
-                                                                                
-pages_list = str(input())                                                       
-pages_list = pages_list.split(', ')                                             
-                                                                                
-if pages_list[-1] in wikipedia.languages():                                     
-    wikipedia.set_lang(pages_list[-1])                                          
-    del pages_list[-1]                                                          
-else:                                                                           
-    print('no results')                                                         
-    exit()                                                                      
-                                                                                
-from help_wiki_function import is_page_valid                                    
-for i in pages_list:                                                            
-    if not is_page_valid(i):                                                    
-        pages_list.remove(i)                                                    
-                                                                                
-max_words, page_number_max = 0, 0                                               
-for i in range(len(pages_list)):                                                
-    text = wikipedia.summary(pages_list[i])                                     
-    words = text.count(' ') + 1                                                 
-    if words >= max_words:                                                      
-        max_words = words                                                       
-        page_number_max = i                                                     
-print(max_words, wikipedia.page(pages_list[page_number_max]).title)          
+import wikipedia
+from help_wiki_function import is_page_valid
 
-# -------------------------------OK-------------------------------------------
+pages_list = str(input()).split(', ')
 
-chain=[]                                                     
-chain.append(pages_list[0])                                                     
-for i in range(len(pages_list)-1):
-    links=wikipedia.page(pages_list[i]).links
-    if pages_list[i+1] in links:
-        chain.append(pages_list[i+1])                                           
+if pages_list[-1] in wikipedia.languages():
+    wikipedia.set_lang(pages_list[-1])
+    del pages_list[-1]
+else:
+    print('no results')
+    exit()
+
+i = 0
+while i < len(pages_list):
+    if not is_page_valid(i):
+        pages_list.remove(pages_list[i])
+        i -= 1
+
+max_words, page_number_max = 0, 0
+for i in range(len(pages_list)):
+    words = len(wikipedia.summary(pages_list[i]).split())
+    if words >= max_words:
+        max_words = words
+        page_number_max = i
+print(max_words, wikipedia.page(pages_list[page_number_max]).title)
+
+chain = [pages_list[0]]
+for i in range(len(pages_list) - 1):
+    links = wikipedia.page(pages_list[i]).links
+    if pages_list[i + 1] in links:
+        chain.append(pages_list[i + 1])
     else:
-        for j in range(len(links))
-            sublinks=wikipedia.page(links[j]).links                                                                                
-            if pages_list[i+1] in sublinks:                      
-                chain.append()                                                 
-                chain.append(pages_list[i+1])
-                continue                                 
+        j, not_finded = 0, True
+        while not_finded:
+            sublinks = wikipedia.page(links[j]).links
+            if pages_list[i + 1] in sublinks:
+                chain.append(links[j])
+                chain.append(pages_list[i + 1])
+                not_finded = False
 print(chain)
