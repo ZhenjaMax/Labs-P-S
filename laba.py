@@ -1,7 +1,6 @@
 import wikipedia
 from help_wiki_function import is_page_valid
-
-pages_list = str(input()).split(', ')
+pages_list = input().split(', ')
 
 if pages_list[-1] in wikipedia.languages():
     wikipedia.set_lang(pages_list[-1])
