@@ -14,6 +14,7 @@ while i < len(pages_list):
     if not is_page_valid(i):
         pages_list.remove(pages_list[i])
         i -= 1
+    i+=1
 
 max_words, page_number_max = 0, 0
 for i in range(len(pages_list)):
