@@ -11,10 +11,10 @@ else:
 
 i = 0
 while i < len(pages_list):
-    if not is_page_valid(i):
-        pages_list.remove(pages_list[i])
-        i -= 1
-    i+=1
+    if is_page_valid(i):
+        i+=1
+    else:
+        del pages_list[i]
 
 max_words, page_number_max = 0, 0
 for i in range(len(pages_list)):
