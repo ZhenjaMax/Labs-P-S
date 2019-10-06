@@ -14,7 +14,7 @@ while i < len(pages_list):
     if is_page_valid(i):
         i += 1
     else:
-        del pages_list[i]
+        del pages[i]
 
 max_words, max_number = 0, 0
 for i in range(len(pages)):
