@@ -10,7 +10,7 @@ else:
     exit()
 
 i = 0
-while i < len(pages_list):
+while i < len(pages):
     if is_page_valid(i):
         i += 1
     else:
