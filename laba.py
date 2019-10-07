@@ -9,12 +9,10 @@ else:
     print('no results')
     exit()
 
-i = 0
-while i < len(pages):
-    if is_page_valid(i):
-        i += 1
-    else:
-        del pages[i]
+for i in range(len(pages)):
+    if not is_page_valid(i):
+        print('no results')
+        exit()
 
 max_words, max_number = 0, 0
 for i in range(len(pages)):
