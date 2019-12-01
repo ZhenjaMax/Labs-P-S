@@ -89,7 +89,6 @@ int isToBe(char* sentence){
 			}
 			j++;
 			wordCount++;
-			
 		}
 		if(sentence[i]!=mask[j])
 			return 0;
@@ -115,7 +114,7 @@ void findToBe(char **text, *sentence_count){
 					wordFirst[j]=text[i][3+j];
 				wordFirst[length]='\0';
 			}else{
-				
+			///////////////////////////////////////////////////////////////////////
 			}
 		}else text[i] = NULL;	
 	}
