@@ -8,19 +8,15 @@ char** readText(int *sentence_count){
     if (text == NULL)
         return NULL;
     int i=0;
-    char **buffer_text;
-	char *buffer_sentence;
 	int sentence_max=0;
     char c = getchar();
     do{
         i=0;
-        if((buffer_text=(char**)realloc(text, (*sentence_count+1)*sizeof(char**)))==NULL)
+        if((text=(char**)realloc(text, (*sentence_count+1)*sizeof(char**)))==NULL)
             return NULL;
-        text=buffer_text;
         do{
-			if((buffer_sentence=(char*)realloc(text[*sentence_count], sizeof(char*)*(i+3)))==NULL)
+			if((text[i]=(char*)realloc(text[*sentence_count], sizeof(char*)*(i+3)))==NULL)
     			return NULL;
-    		text[*sentence_count]=buffer_sentence;
             text[*sentence_count][i]=c;
             i++;
         }while((c=getchar())!='.');
@@ -29,7 +25,7 @@ char** readText(int *sentence_count){
         (*sentence_count)++;
 		if(i+2>sentence_max)
 			sentence_max=i+2;
-    }while((c = getchar())!=EOF);
+    }while((c = getchar())!='\n');
     
     char checker[*sentence_count][sentence_max];
     int j=0;
@@ -60,8 +56,8 @@ void printText(char **text, int sentence_count){
     return;
 }
 
-int isVowel(char ch){
-    char vowels[7] = "aeiouy";
+int isVowel(char* ch){
+    char vowels[] = "aeiouy";
     if (strstr(vowels, ch)==NULL)
         return 0;
     return 1;
@@ -70,13 +66,13 @@ int isVowel(char ch){
 void changeVowel(char **text, int sentence_count){
     for(int i=0; i<sentence_count; i++)
         for(int j=0; j<strlen(text[i]); i++)
-            if(isVowel(text[i][j]))
+            if(isVowel(&text[i][j]))
                 text[i][j]++;
     return;
 }
 
 int isToBe(char* sentence){
-	char mask[18]="To * or not to *.";
+	char mask[]="To * or not to *.";
 	int length[2] = {0};
 	int wordCount=0;
 	int j=0;
@@ -98,7 +94,7 @@ int isToBe(char* sentence){
 	else return length[1];
 }
 
-void findToBe(char **text, *sentence_count){
+void findToBe(char **text, int *sentence_count){
 	int length;
 	char *wordFirst = (char*)calloc(1, sizeof(char));
 	char *wordSecond = (char*)calloc(1, sizeof(char));
@@ -170,24 +166,24 @@ void backwardText(char **text, int sentence_count){
 	}
 }
 
-int mystrcmp(char* first, char* second){
+int mystrcmp(const char** first, const char** second){
 	int i1=0;
 	int i2=0;
 	while(1){
-		if((first[i1]=='.')&&(second[i2]=='.'))
+		if((*first[i1]=='.')&&(*second[i2]=='.'))
 			return 0;
-		if((first[i1]==' ')||(first[i1]==','))
+		if((*first[i1]==' ')||(*first[i1]==','))
 			i1++;
-		if((second[i2]==' ')||(second[i2]==','))
+		if((*second[i2]==' ')||(*second[i2]==','))
 			i2++;
-		if(first[i1]=='.')
-			return second[i2];
-		if(second[i2]=='.')
-			return first[i1];
-		if(first[i1]==second[i2]){
+		if(*first[i1]=='.')
+			return (int)(*second[i2]);
+		if(*second[i2]=='.')
+			return (int)(*first[i1]);
+		if(*first[i1]==*second[i2]){
 			i1++;
 			i2++;
-		} else return first[i1]-second[i2];
+		} else return (int)(*first[i1]-*second[i2]);
 	}
 }
 
