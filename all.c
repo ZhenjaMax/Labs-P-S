@@ -12,7 +12,6 @@ char** readText(int *sentence_count){
 	char *buffer_sentence;
 	int sentence_max=0;
     char c = getchar();
-	
     do{
         i=0;
         if((buffer_text=(char**)realloc(text, (*sentence_count+1)*sizeof(char**)))==NULL)
@@ -57,7 +56,7 @@ char** readText(int *sentence_count){
 
 void printText(char **text, int sentence_count){
     for(int i=0; i<sentence_count; i++)
-        printf("%s", text[i]);
+        printf("%s\n", text[i]);
     return;
 }
 
@@ -124,7 +123,7 @@ void findToBe(char **text, *sentence_count){
 				strcpy(text[i], wordSecond);
 			}
 		}else{
-			free(text[i]);
+			free(text[i]); ////////////////
 			(*sentence_count)--;
 			for(int k=i; k<*sentence_count; k++)
 				text[k]=text[k+1];
@@ -177,14 +176,14 @@ int mystrcmp(char* first, char* second){
 	while(1){
 		if((first[i1]=='.')&&(second[i2]=='.'))
 			return 0;
+		if((first[i1]==' ')||(first[i1]==','))
+			i1++;
+		if((second[i2]==' ')||(second[i2]==','))
+			i2++;
 		if(first[i1]=='.')
 			return second[i2];
 		if(second[i2]=='.')
 			return first[i1];
-		while((first[i1]==' ')||(first[i1]==','))
-			i1++;
-		while((second[i2]==' ')||(second[i2]==','))
-			i2++;
 		if(first[i1]==second[i2]){
 			i1++;
 			i2++;
@@ -204,7 +203,7 @@ int main(){
 	int sentence_count = 0;
 	char **text = readText(&sentence_count);
 	if(text==NULL){
-		printf("Ошибка выделения памяти.");
+		printf("Ошибка выделения памяти.\n");
 		return 1;
 	}
 	printf("Введите одно из чисел ниже, чтобы выбрать действие:\n\n1) Заменить в тексте все гласные буквы на следующую букву в алфавите.\n2) Найти все предложения вида “To <подстрока1> or not to <подстрока2>” и для каждого такого предложения вывести подстроку у которой длина больше.\n3) Удалить все предложения у которых длина первого слова равняется 4.\n4) Отсортировать предложения по увеличению кода последнего символа не являющегося разделителем предложений или слов.\n0) Выйти из программы.\n");
@@ -229,7 +228,7 @@ int main(){
 		case 0:
 			break;
 		default:
-			printf("Неправильный ввод!");
+			printf("Неправильный ввод!\n");
 			break;
 	}
 	return 0;
