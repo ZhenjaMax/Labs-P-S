@@ -33,7 +33,7 @@ char** readText(int *sentence_count){
     }while((c = getchar())!=EOF);
     
     char checker[*sentence_count][sentence_max];
-    int j;
+    int j=0;
     
 	for(i=0; i<*sentence_count; i++){
 		strcpy(checker[i], text[i]);
@@ -63,7 +63,7 @@ void printText(char **text, int sentence_count){
 
 int isVowel(char ch){
     char vowels[7] = "aeiouy";
-    if (strstr(ch, vowels)==NULL)
+    if (strstr(vowels, ch)==NULL)
         return 0;
     return 1;
 }
@@ -77,7 +77,7 @@ void changeVowel(char **text, int sentence_count){
 }
 
 int isToBe(char* sentence){
-	mask[18]="To * or not to *.";
+	char mask[18]="To * or not to *.";
 	int length[2] = {0};
 	int wordCount=0;
 	int j=0;
@@ -103,7 +103,7 @@ void findToBe(char **text, *sentence_count){
 	int length;
 	char *wordFirst = (char*)calloc(1, sizeof(char));
 	char *wordSecond = (char*)calloc(1, sizeof(char));
-	int j = 0
+	int j=0;
 	for(int i=0; i<*sentence_count; i++){
 		length = isToBe(text[i]);
 		if(length!=0){
@@ -122,23 +122,22 @@ void findToBe(char **text, *sentence_count){
 
 int isFourWord(char *sentence){
 	for(int i=0; i<4; i++)
-		if(!alnum(sentence[i]))
+		if(!isalnum(sentence[i]))
 			return 0;
-	if(!alnum(sentence[i]))
+	if(!isalnum(sentence[4]))
 		return 1;
 	return 0;
 }
 
 void deleteFour(char **text, int *sentence_count){
 	for(int i=0; i<*sentence_count; i++)
-		if(strlen(text[i])>6)
-			if(isFourWord(text[i])){
-				free(text[i]);								////////////////
-				(*sentence_count)--;
-				for(int j=i; j<*sentence_count; j++)
-					text[j]=text[j+1];
-				i--;
-			}
+		if(isFourWord(text[i])){
+			free(text[i]);	////////////////
+			(*sentence_count)--;
+			for(int j=i; j<*sentence_count; j++)
+				text[j]=text[j+1];
+			i--;
+		}
 	return;
 }
 
@@ -162,11 +161,11 @@ int mystrcmp(char* first, char* second){
 	int i1=0;
 	int i2=0;
 	while(1){
-		if((first[i1]=='.')&&(first[i2]=='.'))
+		if((first[i1]=='.')&&(second[i2]=='.'))
 			return 0;
 		if(first[i1]=='.')
 			return second[i2];
-		if(first[i2]=='.')
+		if(second[i2]=='.')
 			return first[i1];
 		while((first[i1]==' ')||(first[i1]==','))
 			i1++;
@@ -179,7 +178,7 @@ int mystrcmp(char* first, char* second){
 	}
 }
 
-void sortLast(char **text; int sentence_count){
+void sortLast(char **text, int sentence_count){
 	backwardText(text, sentence_count);
 	qsort(text, sentence_count, sizeof(char*), mystrcmp);
 	backwardText(text, sentence_count);
@@ -202,7 +201,7 @@ int main(){
 			printText(text, sentence_count);
 			break;
 		case 2:
-			findToBe(text, *sentence_count);
+			findToBe(text, &sentence_count);
 			printText(text, sentence_count);
 			break;
 		case 3:
