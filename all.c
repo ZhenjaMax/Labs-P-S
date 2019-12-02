@@ -5,37 +5,37 @@
 
 char** readText(int *sentence_count){
 	char **text = (char**)calloc(1, sizeof(char*));
-    if (text == NULL)
-        return NULL;
-    int i=0;
+	if (text == NULL)
+		return NULL;
+	int i=0;
 	int sentence_max=0;
-    char c = getchar();
-    do{
-        i=0;
-        if((text=(char**)realloc(text, (*sentence_count+1)*sizeof(char**)))==NULL)
-            return NULL;
-        do{
+	char c = getchar();
+	do{
+		i=0;
+		if((text=(char**)realloc(text, (*sentence_count+1)*sizeof(char**)))==NULL)
+			return NULL;
+		do{
 			if((text[i]=(char*)realloc(text[*sentence_count], sizeof(char*)*(i+3)))==NULL)
-    			return NULL;
-            text[*sentence_count][i]=c;
-            i++;
-        }while((c=getchar())!='.');
-        text[*sentence_count][i]='.';
-        text[*sentence_count][i+1]='\0';
-        (*sentence_count)++;
+				return NULL;
+			text[*sentence_count][i]=c;
+			i++;
+		}while((c=getchar())!='.');
+		text[*sentence_count][i]='.';
+		text[*sentence_count][i+1]='\0';
+		(*sentence_count)++;
 		if(i+2>sentence_max)
 			sentence_max=i+2;
-    }while((c = getchar())!='\n');
-    
-    char checker[*sentence_count][sentence_max];
-    int j=0;
-    
+	}while((c = getchar())!='\n');
+	
+	char checker[*sentence_count][sentence_max];
+	int j=0;
+	
 	for(i=0; i<*sentence_count; i++){
 		strcpy(checker[i], text[i]);
 		for(j=0; checker[i][j]; j++)
-		    checker[i][j]=tolower(checker[i][j]);
+			checker[i][j]=tolower(checker[i][j]);
 	}
-    for(i=0;i<*sentence_count;i++)
+	for(i=0;i<*sentence_count;i++)
 		for(j=i+1; j<*sentence_count; j++)
 			if(!strcmp(checker[i], checker[j])){
 				free(text[j]); 	/////////////////
@@ -51,24 +51,24 @@ char** readText(int *sentence_count){
 }
 
 void printText(char **text, int sentence_count){
-    for(int i=0; i<sentence_count; i++)
-        printf("%s\n", text[i]);
-    return;
+	for(int i=0; i<sentence_count; i++)
+		printf("%s\n", text[i]);
+	return;
 }
 
 int isVowel(char* ch){
-    char vowels[] = "aeiouy";
-    if (strstr(vowels, ch)==NULL)
-        return 0;
-    return 1;
+	char vowels[] = "aeiouy";
+	if (strstr(vowels, ch)==NULL)
+		return 0;
+	return 1;
 }
 
 void changeVowel(char **text, int sentence_count){
-    for(int i=0; i<sentence_count; i++)
-        for(int j=0; j<strlen(text[i]); i++)
-            if(isVowel(&text[i][j]))
-                text[i][j]++;
-    return;
+	for(int i=0; i<sentence_count; i++)
+		for(int j=0; j<strlen(text[i]); i++)
+			if(isVowel(&text[i][j]))
+				text[i][j]++;
+	return;
 }
 
 int isToBe(char* sentence){
