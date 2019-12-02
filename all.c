@@ -43,7 +43,7 @@ char** readText(int *sentence_count){
     for(i=0;i<*sentence_count;i++)
 		for(j=i+1; j<*sentence_count; j++)
 			if(!strcmp(checker[i], checker[j])){
-				free(text[j]); 								/////////////////
+				free(text[j]); 	/////////////////
 				(*sentence_count)--;
 				for(int k=j; k<*sentence_count; k++){
 					text[k]=text[k+1];
@@ -113,11 +113,25 @@ void findToBe(char **text, *sentence_count){
 				for(j=0; j<length; j++)
 					wordFirst[j]=text[i][3+j];
 				wordFirst[length]='\0';
+				text[i]=realloc(text[i], length+1);
+				strcpy(text[i], wordFirst);
 			}else{
-			///////////////////////////////////////////////////////////////////////
+				wordSecond=(char*)realloc(wordSecond, length+1);
+				for(j=0; j<length; j++)
+					wordSecond[length-1-j]=text[i][strlen(text[i]-2-j)];
+				wordSecond[length]='\0';
+				text[i]=realloc(text[i], length+1);
+				strcpy(text[i], wordSecond);
 			}
-		}else text[i] = NULL;	
+		}else{
+			free(text[i]);
+			(*sentence_count)--;
+			for(int k=i; k<*sentence_count; k++)
+				text[k]=text[k+1];
+			i--;
+		}
 	}
+	return;
 }
 
 int isFourWord(char *sentence){
