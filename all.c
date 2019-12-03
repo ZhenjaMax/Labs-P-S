@@ -8,19 +8,15 @@ char** readText(int *sentence_count){
     if (text == NULL)
         return NULL;
     int i=0;
-    char **buffer_text;
-	char *buffer_sentence;
 	int sentence_max=0;
     char c = getchar();
     do{
         i=0;
-        if((buffer_text=(char**)realloc(text, ((*sentence_count)+1)*sizeof(char**)))==NULL)
+        if((text=(char**)realloc(text, ((*sentence_count)+1)*sizeof(char**)))==NULL)
             return NULL;
-        text=buffer_text;
         do{
-			if ((buffer_sentence=(char*)realloc(text[*sentence_count], sizeof(char*)*(i+3)))==NULL)
+			if ((text[*sentence_count]=(char*)realloc(text[*sentence_count], sizeof(char*)*(i+3)))==NULL)
     			return NULL;
-    		text[*sentence_count]=buffer_sentence;
             text[*sentence_count][i]=c;
             i++;
         }while((c=getchar())!='.');
@@ -30,10 +26,11 @@ char** readText(int *sentence_count){
 		if (i+2>sentence_max)
 			sentence_max=i+2;
     }while((c = getchar())!='\n');
-    
+	
+    //	Deleting same sentences	\\
+	
     char checker[*sentence_count][sentence_max];
     int j;
-    
 	for(i=0; i<*sentence_count; i++){
 		strcpy(checker[i], text[i]);
 		for(j=0; checker[i][j]; j++)
@@ -53,8 +50,11 @@ char** readText(int *sentence_count){
 }
 
 void printText(char **text, int sentence_count){
-	for(int i=0; i<sentence_count; i++)
+	for(int i=0; i<sentence_count; i++){
 		printf("%s\n", text[i]);
+		free(text[i]);
+	}
+	free(text);
 	return;
 }
 
@@ -73,20 +73,19 @@ void changeVowel(char **text, int sentence_count){
 	return;
 }
 
-
 int isToBe(char* sentence){
 	char mask[]="To * or not to *.";
 	int length[2] = {0};
-	int wordCount=0;
+	int word=0;
 	int j=0;
 	for(int i=0; i<strlen(mask); i++){
 		if(mask[i]=='*'){
 			while(isalnum(sentence[j])){
 				j++;
-				length[wordCount]++;
+				length[word]++;
 			}
 			i++;
-			wordCount++;
+			word++;
 		}
 		if(sentence[j]!=mask[i])
 			return 0;
@@ -99,31 +98,31 @@ int isToBe(char* sentence){
 
 void findToBe(char **text, int *sentence_count){
 	int length=0;
-	char *wordFirst = (char*)calloc(1, sizeof(char));
-	char *wordSecond = (char*)calloc(1, sizeof(char));
+	char *ptr1 = (char*)calloc(1, sizeof(char));
+	char *ptr2 = (char*)calloc(1, sizeof(char));
 	for(int i=0; i<*sentence_count; i++){
 		length = isToBe(text[i]);
 		if(length<0){
 			length = -length;
-			wordFirst = (char*)realloc(wordFirst, length+1);
+			ptr1 = (char*)realloc(ptr1, length+1);
 			for(int j=0; j<length; j++)
-				wordFirst[j]=text[i][3+j];
-			wordFirst[length]='\0';
+				ptr1[j]=text[i][3+j];
+			ptr1[length]='\0';
 			text[i]=realloc(text[i], length+1);
-			strcpy(text[i], wordFirst);
+			strcpy(text[i], ptr1);
 			continue;
 		}
 		if(length>0){
-			wordSecond=(char*)realloc(wordSecond, length+1);
+			ptr2=(char*)realloc(ptr2, length+1);
 			for(int j=0; j<length; j++)
-				wordSecond[length-1-j]=text[i][strlen(text[i])-2-j];
-			wordSecond[length]='\0';
+				ptr2[length-1-j]=text[i][strlen(text[i])-2-j];
+			ptr2[length]='\0';
 			text[i]=realloc(text[i], length+1);
-			strcpy(text[i], wordSecond);
+			strcpy(text[i], ptr2);
 			continue;
 			}
 		if(length==0){
-			free(text[i]); ////////////////
+			free(text[i]);
 			(*sentence_count)--;
 			for(int j=i; j<*sentence_count; j++)
 				text[j]=text[j+1];
@@ -131,6 +130,8 @@ void findToBe(char **text, int *sentence_count){
 			continue;
 		}
 	}
+	free(ptr1);
+	free(ptr2);
 	return;
 }
 
@@ -146,7 +147,7 @@ int isFourWord(char *sentence){
 void deleteFour(char **text, int *sentence_count){
 	for(int i=0; i<*sentence_count; i++)
 		if(isFourWord(text[i])){
-			free(text[i]);	////////////////
+			free(text[i]);
 			(*sentence_count)--;
 			for(int j=i; j<*sentence_count; j++)
 				text[j]=text[j+1];
@@ -172,26 +173,28 @@ void backwardText(char **text, int sentence_count){
 	return;
 }
 
-int mystrcmp(const void* first, const void* second){						////WTF IT DOESN'T WORK
+int mystrcmp(const void* first, const void* second){
 	int i1=0;
 	int i2=0;
-	first=(char*)first;
-	second=(char*)second;
+	char** temp1=(char**)first;
+	char** temp2=(char**)second;
+	char *ptr1 = *temp1;
+	char *ptr2 = *temp2;
 	while(1){
-		if((first[i1]=='.')&&(second[i2]=='.'))
+		if((ptr1[i1]=='.')&&(ptr2[i2]=='.'))
 			return 0;
-		if((first[i1]==' ')||(first[i1]==','))
+		if(ptr1[i1]=='.')
+			return ptr2[i2];
+		if((ptr2)[i2]=='.')
+			return ptr1[i1];
+		if(!isalnum(ptr1[i1]))
 			i1++;
-		if((second[i2]==' ')||(second[i2]==','))
+		if(!isalnum(ptr2[i2]))
 			i2++;
-		if(first[i1]=='.')
-			return second[i2];
-		if(second[i2]=='.')
-			return first[i1];
-		if(first[i1]==second[i2]){
+		if(ptr1[i1]==ptr2[i2]){
 			i1++;
 			i2++;
-		} else return first[i1]-second[i2];
+		} else return ptr1[i1]-ptr2[i2];
 	}
 }
 
@@ -201,7 +204,6 @@ void sortLast(char **text, int sentence_count){
 	backwardText(text, sentence_count);
 	return;
 }
-
 
 int main(){
     int sentence_count=0;
