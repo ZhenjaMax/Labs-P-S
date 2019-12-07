@@ -26,9 +26,6 @@ char** readText(int *sentence_count){
 		if (i+2>sentence_max)
 			sentence_max=i+2;
     }while((c = getchar())!='\n');
-	
-    //	Deleting same sentences	\\
-	
     char checker[*sentence_count][sentence_max];
     int j;
 	for(i=0; i<*sentence_count; i++){
@@ -74,26 +71,17 @@ void changeVowel(char **text, int sentence_count){
 }
 
 int isToBe(char* sentence){
-	char mask[]="To * or not to *.";
-	int length[2] = {0};
-	int word=0;
-	int j=0;
-	for(int i=0; i<strlen(mask); i++){
-		if(mask[i]=='*'){
-			while(isalnum(sentence[j])){
-				j++;
-				length[word]++;
-			}
-			i++;
-			word++;
-		}
-		if(sentence[j]!=mask[i])
-			return 0;
-		j++;
+	char* ptr1 = strstr(sentence, "To ");
+	char* ptr2 = strstr(sentence, " or not to ");
+	int len1, len2;
+	if(ptr1==sentence && ptr2!=NULL){
+		len1 = ptr2-ptr1-3;
+		len2 = sentence+strlen(sentence)-(ptr2+12);
+		if(len1>len2)
+			return -len1;
+		else return len2;
 	}
-	if(length[0]>length[1])
-		return -length[0];
-	else return length[1];
+	else return 0;
 }
 
 void findToBe(char **text, int *sentence_count){
