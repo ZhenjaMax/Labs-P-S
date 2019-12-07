@@ -26,6 +26,7 @@ char** readText(int *sentence_count){
 		if (i+2>sentence_max)
 			sentence_max=i+2;
     }while((c = getchar())!='\n');
+	
     char checker[*sentence_count][sentence_max];
     int j;
 	for(i=0; i<*sentence_count; i++){
@@ -33,9 +34,10 @@ char** readText(int *sentence_count){
 		for(j=0; checker[i][j]; j++)
 		    checker[i][j]=tolower(checker[i][j]);
 	}
-    for(i=0;i<*sentence_count;i++)
+    for(i=0; i<*sentence_count; i++)
 		for(j=i+1; j<*sentence_count; j++)
 			if(!strcmp(checker[i], checker[j])){
+			    free(text[j]);
 				(*sentence_count)--;
 				for(int k=j; k<*sentence_count; k++){
 					text[k]=text[k+1];
@@ -164,15 +166,14 @@ void backwardText(char **text, int sentence_count){
 int mystrcmp(const void* first, const void* second){
 	int i1=0;
 	int i2=0;
-	char** temp1=(char**)first;
-	char** temp2=(char**)second;
-	char *ptr1 = *temp1;
-	char *ptr2 = *temp2;
+	char *ptr1=*((char**)first);
+	char *ptr2 =*((char**)second);
 	while(1){
 		if((ptr1[i1]=='.')&&(ptr2[i2]=='.'))
 			return 0;
+		
 		if(ptr1[i1]=='.')
-			return ptr2[i2];
+			return -ptr2[i2];
 		if((ptr2)[i2]=='.')
 			return ptr1[i1];
 		if(!isalnum(ptr1[i1]))
