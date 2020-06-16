@@ -128,11 +128,9 @@ public:
             printf(ERR_FILE);
             exit(1);
         }
-
         int padding = BIH.width%4;
         unsigned char* temp;
-        if(padding) temp = (unsigned char*)malloc(padding*sizeof(unsigned char));
-
+        if(padding) temp = (unsigned char*)calloc(padding, sizeof(unsigned char));
         if((PixelArray = (Pixel**)malloc(BIH.height*sizeof(Pixel*))) == NULL){
             printf(ERR_FILE);
             exit(1);
@@ -260,20 +258,16 @@ public:
             printf(ERR_FILE);
             exit(1);
         }
-
         fwrite(&BFH, sizeof(BMPFileHeader), 1, f);
         fwrite(&BIH, sizeof(BMPInfoHeader), 1, f);
-
         int padding = BIH.width%4;
         unsigned char* temp;
         if(padding) temp = (unsigned char*)calloc(padding, sizeof(unsigned char));
-
         fseek(f, BFH.offset, SEEK_SET);
         for(int i=0; i<(int)BIH.height; i++){
             fwrite(PixelArray[BIH.height-1-i], sizeof(Pixel), BIH.width, f);
             if(padding) fwrite(temp, sizeof(unsigned char), padding, f);
         }
-
         fclose(f);
         printf("[BMP] File successfully saved as %s.\n", name);
         return;
@@ -323,7 +317,6 @@ int main(int argc, char* argv[]){
         printf(ERR_FEW_ARGS);
         return 1;
     }
-
 	while((opt = getopt_long(argc, argv, opts, longOpts, &longIndex))!=-1){
 		switch(opt){
 			case 'l':
